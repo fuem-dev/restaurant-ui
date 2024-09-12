@@ -11,7 +11,14 @@ interface Dish {
  name: string;
  description: string;
  difficulty: string;
- id:number;
+ id: number;
+ title:string
+}
+
+
+// Define the type for the cart item, including the quantity
+interface CartItem extends Dish {
+ quantity: number;
 }
 
 
@@ -29,7 +36,14 @@ export default function Home() {
  const [dishes, setDishes] = useState<Dish[]>([]); // Apply the type to the state
  const [currentPage, setCurrentPage] = useState(1);
  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+ const [cart, setCart] = useState<CartItem[]>([]); // State for the shopping cart
  const dishesPerPage = 10;
+
+
+ // Log the cart whenever it changes
+ useEffect(() => {
+   console.log("Cart updated:", cart);
+ }, [cart]);
 
 
  // Function to load the data from the API
@@ -90,9 +104,49 @@ export default function Home() {
 
 
  // Handle difficulty filter change
- const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+ const handleDifficultyChange = (
+   event: React.ChangeEvent<HTMLSelectElement>
+ ) => {
    setSelectedDifficulty(event.target.value);
    setCurrentPage(1); // Reset to page 1 when the filter changes
+ };
+
+
+ // Function to add a dish to the cart
+ const handleAddToCart = (id: number) => {
+   const dishToAdd = dishes.find((dish) => dish.id === id);
+   if (dishToAdd) {
+     const existingItem = cart.find((item) => item.id === id);
+     if (existingItem) {
+       setCart(
+         cart.map((item) =>
+           item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+         )
+       );
+     } else {
+       setCart([...cart, { ...dishToAdd, quantity: 1 }]);
+     }
+   }
+ };
+
+
+ // Function to decrease the quantity of a dish in the cart by one
+ const handleRemoveOneFromCart = (id: number) => {
+   setCart(
+     cart
+       .map((item) =>
+         item.id === id && item.quantity > 1
+           ? { ...item, quantity: item.quantity - 1 }
+           : item
+       )
+       .filter((item) => item.quantity > 0)
+   );
+ };
+
+
+ // Function to remove the dish completely from the cart
+ const handleRemoveFromCart = (id: number) => {
+   setCart(cart.filter((item) => item.id !== id));
  };
 
 
@@ -100,6 +154,41 @@ export default function Home() {
    <div className="container mx-auto p-8">
      <h1 className="text-3xl font-bold mb-4">Restaurant Menu</h1>
      <Link href="/admin">Admin Dishes</Link>
+
+
+     {/* Cart Section */}
+     <div className="mt-8 mb-8 p-4 border rounded-md shadow-md">
+       <h2 className="text-xl font-bold mb-2">Shopping Cart</h2>
+       {cart.length === 0 ? (
+         <p>Your cart is empty.</p>
+       ) : (
+         <ul>
+           {cart.map((item) => (
+             <li key={item.id} className="mb-2">
+               <div>
+                 <strong>{item.title}</strong> - {item.difficulty}{" "}
+                 <span>({item.quantity})</span>
+                 <p>{item.description}</p>
+                 <button
+                   className="text-red-500 ml-4"
+                   onClick={() => handleRemoveOneFromCart(item.id)}
+                 >
+                   Remove one
+                 </button>
+                 <button
+                   className="text-red-500 ml-4"
+                   onClick={() => handleRemoveFromCart(item.id)}
+                 >
+                   Remove all
+                 </button>
+               </div>
+             </li>
+           ))}
+         </ul>
+       )}
+     </div>
+
+
      <nav className="container mx-auto p-8">
        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
          <li>
@@ -144,7 +233,7 @@ export default function Home() {
                id="difficulty"
                value={selectedDifficulty}
                onChange={handleDifficultyChange}
-               className="border rounded px-2 py-1 px-4 py-2 rounded bg-blue-500 text-white"
+               className="border rounded px-2 py-1"
              >
                <option value="">All</option>
                <option value="Easy">Easy</option>
@@ -155,11 +244,17 @@ export default function Home() {
          </li>
        </ul>
      </nav>
+
+
      {/* Dishes */}
      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-       {currentDishes.map((dish, index) => (
-      
-         <Dish key={index} {...dish} />
+       {currentDishes.map((dish) => (
+         <Dish
+           key={dish.id}
+           {...dish}
+           onAddToCart={handleAddToCart}
+           onRemoveFromCart={handleRemoveFromCart}
+         />
        ))}
      </section>
    </div>
