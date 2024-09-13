@@ -1,4 +1,3 @@
-
 "use client"; // Indicates that this is a Client Component
 
 
@@ -100,7 +99,9 @@ export default function Home() {
  };
 
 
- const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+ const handleDifficultyChange = (
+   event: React.ChangeEvent<HTMLSelectElement>
+ ) => {
    setSelectedDifficulty(event.target.value);
    setCurrentPage(1);
  };
@@ -128,8 +129,7 @@ export default function Home() {
      car
        .map((item) =>
          item.id === id && item.quantity > 1
-           ? { ...item, quantity: item.quantity - 1 }
-           : item
+           ? { ...item, quantity: item.quantity - 1 } : item
        )
        .filter((item) => item.quantity > 0)
    );
@@ -151,23 +151,24 @@ export default function Home() {
      />
 
 
-     <nav className="container mx-auto p-8">
-       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-         <li>
+     <nav className="container mx-auto p-4">
+       {/* Flexbox with wrapping enabled for small screens */}
+       <div className="flex flex-wrap items-center justify-between">
+         <div className="flex flex-col sm:flex-row items-center">
            {/* Pagination controls */}
-           <div className="flex justify-between mt-4">
+           <div className="flex justify-between mt-4 sm:mt-0 sm:mr-4" style={{ fontSize: '14px' }}>
              <button
                onClick={handlePreviousPage}
                disabled={currentPage === 1}
-               className={`px-4 py-2 rounded bg-blue-500 text-white ${
+               className={`w-8 h-8 rounded bg-gray-500 text-white ${
                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
                }`}
              >
-               Previous
+               {"<"}
              </button>
 
 
-             <span className="text-lg">
+             <span className="text-sm mx-2">
                Page {currentPage} of {totalPages}
              </span>
 
@@ -175,27 +176,26 @@ export default function Home() {
              <button
                onClick={handleNextPage}
                disabled={currentPage === totalPages}
-               className={`px-4 py-2 rounded bg-blue-500 text-white ${
-                 currentPage === totalPages
-                   ? "opacity-50 cursor-not-allowed"
-                   : ""
+               className={`w-8 h-8 rounded bg-gray-500 text-white ${
+                 currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
                }`}
              >
-               Next
+               {">"}
              </button>
            </div>
-         </li>
-         <li>
+
+
            {/* Filter by difficulty */}
-           <div className="mb-4">
+           <div className="flex items-center mt-4 sm:mt-0" style={{ fontSize: '14px' }}>
              <label htmlFor="difficulty" className="mr-2">
-               Filter by Difficulty:
+               Difficulty:
              </label>
              <select
                id="difficulty"
                value={selectedDifficulty}
                onChange={handleDifficultyChange}
-               className="border rounded px-2 py-1"
+               className="border rounded px-2 py-1 text-white bg-black"
+               style={{ width: '120px', height: '32px' }}
              >
                <option value="">All</option>
                <option value="Easy">Easy</option>
@@ -203,8 +203,8 @@ export default function Home() {
                <option value="Hard">Hard</option>
              </select>
            </div>
-         </li>
-       </ul>
+         </div>
+       </div>
      </nav>
 
 
@@ -222,7 +222,5 @@ export default function Home() {
    </div>
  );
 }
-
-
 
 

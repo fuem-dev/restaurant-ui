@@ -48,7 +48,6 @@ export default function Menu() {
  // Function to handle removing a dish from the cart
  const handleRemoveFromCart = (id: number) => {
    console.log(`Removing dish with ID: ${id} from cart`);
-   // Add your logic for removing the dish from the cart
  };
 
 
@@ -61,7 +60,7 @@ export default function Menu() {
 
  return ( 
    <div className="container mx-auto p-8">
-     <h1 className="text-3xl font-bold mb-4">Restaurant Menu</h1>
+     <h3 className="font-bold mb-4">Add dishes</h3>
 
 
      {/* Form to add a new dish */}
