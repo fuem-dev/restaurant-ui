@@ -21,7 +21,7 @@ const Header: FC = () => {
          </li>
          <li>
            <Link href="/shopping" className="hover:underline">
-            Shopping Cart
+            Shopping Car
            </Link>
          </li>
        </ul>

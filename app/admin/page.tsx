@@ -114,8 +114,8 @@ export default function Menu() {
            description={dish.description}
            difficulty={dish.difficulty}
            image={dish.image}
-           onAddToCart={handleAddToCart}
-           onRemoveFromCart={handleRemoveFromCart}
+           onAddToCar={handleAddToCart}
+           onRemoveFromCar={handleRemoveFromCart}
            hideButtons={true}
          />
        ))}
