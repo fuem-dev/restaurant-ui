@@ -4,7 +4,7 @@
 
 
 import { useState, useEffect } from "react";
-import Dish from "../components/Dish";
+import Dish from "@/components/Dish";
 import Link from "next/link";
 
 
@@ -309,5 +309,3 @@ return (
   </div>
 );
 }
-
-
